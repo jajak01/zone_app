@@ -1,0 +1,47 @@
+CREATE TABLE "User" (
+    "User_ID" SERIAL PRIMARY KEY,
+    "user_name" VARCHAR(100) NOT NULL,
+    "anon_name" VARCHAR(100) -- alias
+);
+
+CREATE TABLE "User_Auth" (
+    "User_ID" INTEGER PRIMARY KEY REFERENCES "User"("User_ID"),
+    "Email" VARCHAR(255) UNIQUE NOT NULL,
+    "Pass" TEXT NOT NULL,
+    "Phone" VARCHAR(20)
+);
+
+CREATE TABLE "User_Info" (
+    "User_ID" INTEGER PRIMARY KEY REFERENCES "User"("User_ID"),
+    "Email" VARCHAR(255),
+    "Phone" VARCHAR(20),
+    "Birth_Date" DATE,
+    "Base_Location" TEXT,
+    "Height" NUMERIC(5,2),
+    "Weight" NUMERIC(5,2)
+);
+
+==========
+
+CREATE TABLE "User_Activity" (
+    "ID_Activity" SERIAL PRIMARY KEY,
+    "User_ID" INTEGER REFERENCES "User"("User_ID"),
+    "Type_Activity" VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE "Activity_Detail" (
+    "ID_Activity" INTEGER PRIMARY KEY REFERENCES "User_Activity"("ID_Activity"),
+    "User_ID" INTEGER REFERENCES "User"("User_ID"),
+    "LOG_GIS_SPATIAL" GEOMETRY -- Requires PostGIS extension, or use TEXT/JSONB
+);
+
+===========
+
+CREATE TABLE "Summary_Activity" (
+    "ID_Activity" INTEGER PRIMARY KEY REFERENCES "User_Activity"("ID_Activity"),
+    "Distance_Activity" NUMERIC(10,2),
+    "Moving_Time" INTERVAL,
+    "Avg_Speed" NUMERIC(5,2),
+    "Simple_GIS" TEXT,
+    "Calories" INTEGER
+);
